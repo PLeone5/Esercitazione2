@@ -58,11 +58,12 @@ public class LoginServlet extends HttpServlet {
             password = password.trim();
 
             if (!DBUtil.isValidUser(username, password)) {
-                LOG.error("Login failed >>> User: " + username + " >>> Password: " + password);
-                throw new Exception("Login Failed: We're sorry, but this username or password was not found in our system. Please try again.");
+                // ----- V3_Information Disclosure -----
+                LOG.warn(String.format("Login failed for user: " + username));
+                throw new ServletException("Login Failed: We're sorry, but this username or password was not found in our system. Please try again.");
             }
         } catch (Exception ex) {
-            LOG.error(ex.toString());
+            LOG.error("Login error: " + ex.getMessage());
             request.getSession(true).setAttribute("loginError", ex.getLocalizedMessage());
             response.sendRedirect("login.jsp");
             return;
